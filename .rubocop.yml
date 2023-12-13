@@ -25,8 +25,12 @@ Metrics/AbcSize:
 Metrics/ClassLength:
   Max: 150
 Metrics/BlockLength:
-  IgnoredMethods: ['describe']
-  Max: 30
+  Enabled: true
+  # IgnoredMethods:
+  AllowedMethods:
+    - some_method
+  # AllowedPatterns:
+    - ^_?initialize$
 
 Style/Documentation:
   Enabled: false
@@ -43,6 +47,8 @@ Style/FrozenStringLiteralComment:
 
 Layout/HashAlignment:
   EnforcedColonStyle: key
+Layout/EndOfLine:
+  EnforcedStyle: lf
 Layout/ExtraSpacing:
   AllowForAlignment: false
 Layout/MultilineMethodCallIndentation:

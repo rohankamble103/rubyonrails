@@ -1,0 +1,20 @@
+FROM ruby:3.1.2 AS builder 
+WORKDIR /app
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+COPY . .
+RUN apt-get install -y nodejs npm && \
+    rm -rf /var/lib/apt/lists/*
+RUN npm install
+RUN npm install --save-dev stylelint@13.x stylelint-scss@3.x stylelint-config-standard@21.x stylelint-csstree-validator@1.x
+RUN rubocop .
+RUN npx stylelint "**/*.{css,scss}" --fix 
+
+FROM ruby:3.1.2
+WORKDIR /app
+COPY --from=builder /app .
+RUN rake assets:precompile
+EXPOSE 3000
+RUN rails db:drop db:create db:migrate db:seed
+EXPOSE 3000
+CMD ["rails", "server", "-b", "0.0.0.0"]
